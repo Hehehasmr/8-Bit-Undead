@@ -95,8 +95,43 @@ void Game::checkPlayerDamage() {
         }
     }
 
-    // End game if player health reaches 0
+    // Show Game Over screen if health reaches 0
     if (player.getHealth() <= 0) {
-        gameState = MENU; // Send player back to the menu when dead
+        showGameOverScreen();
+    }
+}
+
+void Game::showGameOverScreen() {
+    sf::Font font;
+    if (!font.loadFromFile("assets/arcade.ttf")) { // Ensure font exists
+        return;
+    }
+
+    sf::Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setString("Game Over!\nPress ENTER to return to menu.");
+    gameOverText.setCharacterSize(30);
+    gameOverText.setFillColor(sf::Color::White);
+    gameOverText.setPosition(200, 250);
+
+    while (window.isOpen()) {
+        window.clear(sf::Color::Black);
+        window.draw(gameOverText);
+        window.display();
+
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                gameState = MENU;
+                player = Player(); // Reset player stats
+                zombies.clear();
+                bullets.clear();
+                return;
+            }
+        }
     }
 }
