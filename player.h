@@ -6,7 +6,8 @@
 class Player {
 private:
     int health;
-    sf::Clock damageCooldown; // To prevent instant damage spam
+    sf::Clock damageCooldown;
+    sf::RectangleShape healthBar; // Health bar added
 
 public:
     sf::RectangleShape shape;
@@ -17,6 +18,8 @@ public:
     
     int getHealth();
     void takeDamage(int amount);
+    void updateHealthBar();
+    sf::RectangleShape getHealthBar();
 };
 
 #endif
