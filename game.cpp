@@ -102,13 +102,7 @@ void Game::checkPlayerDamage() {
 }
 
 void Game::showGameOverScreen() {
-    sf::Font font;
-    if (!font.loadFromFile("assets/arcade.ttf")) { // Ensure font exists
-        return;
-    }
-
     sf::Text gameOverText;
-    gameOverText.setFont(font);
     gameOverText.setString("Game Over!\nPress ENTER to return to menu.");
     gameOverText.setCharacterSize(30);
     gameOverText.setFillColor(sf::Color::White);
