@@ -22,7 +22,7 @@ void Game::handleEvents() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) gameState = SHOP;
         }
 
-        // Shooting Mechanic: Press Space to shoot
+        // Shooting Mechanic
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             bullets.emplace_back(player.shape.getPosition().x + 20, player.shape.getPosition().y + 10, {5, 0});
         }
@@ -47,6 +47,9 @@ void Game::update() {
         for (auto& bullet : bullets) {
             bullet.update();
         }
+
+        checkCollisions();
+        checkPlayerDamage();
     }
 }
 
@@ -57,6 +60,8 @@ void Game::render() {
         // Render menu (text not implemented here)
     } else {
         window.draw(player.shape);
+        window.draw(player.getHealthBar()); // Draw health bar
+
         for (auto& zombie : zombies) window.draw(zombie.shape);
         for (auto& bullet : bullets) window.draw(bullet.shape);
     }
@@ -67,5 +72,31 @@ void Game::render() {
 void Game::spawnZombies(int count) {
     for (int i = 0; i < count; i++) {
         zombies.emplace_back(Zombie(rand() % 800, rand() % 600));
+    }
+}
+
+void Game::checkCollisions() {
+    // Check each bullet
+    for (size_t i = 0; i < bullets.size(); i++) {
+        for (size_t j = 0; j < zombies.size(); j++) {
+            if (bullets[i].shape.getGlobalBounds().intersects(zombies[j].shape.getGlobalBounds())) {
+                bullets.erase(bullets.begin() + i);
+                zombies.erase(zombies.begin() + j);
+                return; // Exit after one collision to prevent issues
+            }
+        }
+    }
+}
+
+void Game::checkPlayerDamage() {
+    for (auto& zombie : zombies) {
+        if (player.shape.getGlobalBounds().intersects(zombie.shape.getGlobalBounds())) {
+            player.takeDamage(10); // Zombies deal 10 damage on contact
+        }
+    }
+
+    // End game if player health reaches 0
+    if (player.getHealth() <= 0) {
+        gameState = MENU; // Send player back to the menu when dead
     }
 }
