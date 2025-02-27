@@ -21,6 +21,11 @@ void Game::handleEvents() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) gameState = PLAY_HARD;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) gameState = SHOP;
         }
+
+        // Shooting Mechanic: Press Space to shoot
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            bullets.emplace_back(player.shape.getPosition().x + 20, player.shape.getPosition().y + 10, {5, 0});
+        }
     }
 }
 
