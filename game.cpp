@@ -23,8 +23,10 @@ void Game::handleEvents() {
         }
 
         // Shooting Mechanic
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            bullets.emplace_back(player.shape.getPosition().x + 20, player.shape.getPosition().y + 10, {5, 0});
+        if (gameState == PLAY_EASY || gameState == PLAY_HARD) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                bullets.emplace_back(player.shape.getPosition().x + 20, player.shape.getPosition().y + 10, {5, 0});
+            }
         }
     }
 }
@@ -103,12 +105,21 @@ void Game::checkPlayerDamage() {
 
 void Game::showGameOverScreen() {
     sf::Text gameOverText;
+    sf::Font defaultFont;
+
+    if (!defaultFont.loadFromFile("arial.ttf")) { 
+        return; // Prevent crashes if font is missing
+    }
+
+    gameOverText.setFont(defaultFont);
     gameOverText.setString("Game Over!\nPress ENTER to return to menu.");
     gameOverText.setCharacterSize(30);
     gameOverText.setFillColor(sf::Color::White);
     gameOverText.setPosition(200, 250);
 
-    while (window.isOpen()) {
+    bool waitingForInput = true;
+
+    while (window.isOpen() && waitingForInput) {
         window.clear(sf::Color::Black);
         window.draw(gameOverText);
         window.display();
@@ -124,7 +135,7 @@ void Game::showGameOverScreen() {
                 player = Player(); // Reset player stats
                 zombies.clear();
                 bullets.clear();
-                return;
+                waitingForInput = false;
             }
         }
     }
