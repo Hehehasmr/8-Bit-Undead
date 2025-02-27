@@ -17,7 +17,9 @@ private:
     std::vector<Zombie> zombies;
     std::vector<Bullet> bullets;
 
-    void checkCollisions(); // New function for collision detection
+    void checkCollisions(); // Bullet-Zombie Collision
+    void checkPlayerDamage(); // Zombie Attack System
+    void showGameOverScreen(); // Game Over Screen
 
 public:
     Game();
